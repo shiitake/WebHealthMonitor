@@ -8,6 +8,11 @@ To run the app, follow these steps.
 1. Ensure that [NodeJS](http://nodejs.org/) is installed. This provides the platform on which the build tooling runs.
 2. From the project folder, execute the following command:
 
+  >**Note:** This next command only applies to Windows users with Visual Studio installed. Replace "2012" with your version of Visual Studio.
+  ```shell
+  *** npm config set msvs_version 2012 *** 
+  ```
+
   ```shell
   npm install
   ```
@@ -29,11 +34,6 @@ To run the app, follow these steps.
   ```
   >**Note:** Windows users, if you experience an error of "unknown command unzip" you can solve this problem by doing `npm install -g unzip` and then re-running `jspm install`.
 6. To run the app, execute the following command:
-
->**Note:** This next command only applies to Windows users with Visual Studio installed. Replace "2012" with your version of Visual Studio.
-```shell
-*** npm config set msvs_version 2012 *** 
-```
 
 ```shell
 
