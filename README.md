@@ -10,7 +10,7 @@ To run the app, follow these steps.
 
   >**Note:** This next command only applies to Windows users with Visual Studio installed. Replace "2012" with your version of Visual Studio.
   ```shell
-  *** npm config set msvs_version 2012 *** 
+  npm config set msvs_version 2012
   ```
 
   ```shell
