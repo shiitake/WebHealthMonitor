@@ -2,12 +2,12 @@
   <div class="row">
     <section class="au-animate">
       <div class="col-md-4" repeat.for="url of urls">
-      <div class="panel panel-primary">
-        <div class="panel-heading">${url.name}</div>
-        <div class="panel-body">
-          This is content.
+        <div class="panel ${url.statusCss}">
+          <div class="panel-heading">${url.name} <i class="fa fa-spinner fa-spin pull-right" show.bind="url.checking"></i></div>
+          <div class="panel-body">
+            This is content.
+          </div>
         </div>
-      </div>
       </div>
     </section>
   </div>
