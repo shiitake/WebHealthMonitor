@@ -5,7 +5,7 @@ export class App {
   configureRouter(config, router){
     config.title = 'Aurelia';
     config.map([
-      { route: ['','welcome'], name: 'welcome',      moduleId: './welcome',      nav: true, title:'Welcome' }
+      { route: ['','monitor'], name: 'monitor',      moduleId: './monitor',      nav: true, title:'Web Health Monitor' }
     ]);
 
     this.router = router;
