@@ -1,13 +1,39 @@
 <template>
+  <nav class="navbar">
+    <div class="col-md-4 col-md-offset-8">
+  <div class="input-group navbar-right">
+  <span class="input-group-addon" id="sizing-addon1"><i class="fa fa-search"></i></span>
+  <input id="search" type="text" class="form-control pull-right" value.bind="searchText" placeholder="Search" aria-label="groupSearch">
+</div>
+    <ul>
+    <li repeat.for="group of filteredGroups">${group.Name}</li>
+  </ul>
+    </div>
+  </nav>
+  
   <div class="row">
     <section class="au-animate">
-      <div class="col-md-4" repeat.for="url of urls">
-        <div class="panel ${url.statusCss}">
-          <div class="panel-heading">${url.name} <i class="fa fa-spinner fa-spin pull-right" show.bind="url.checking"></i></div>
-          <div class="panel-body">
-            This is content.
+      <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+      <div class="panel panel-default" repeat.for="group of groups">
+        <div class="panel-heading" role="tab" id="heading${group.name}">
+          <h4 class="panel-title">
+            <a role="button" data-toggle="collapse" data-parent="#collapse${group.name}" href="#collapse${group.name}" aria-expanded="false" aria-controls="collapse${group.name}" click.trigger="group.showOrHide()">
+            ${group.name}
+            <i class="fa ${group.isExpanded} pull-right"></i>            
+            </a>            
+          </h4>       
           </div>
-        </div>
+          <div id="collapse${group.name}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading${group.name}">
+            <div class="panel-body">
+              <div class="col-md-4" repeat.for="url of group.urls">
+                <div class="panel ${url.statusCss}">
+                  <div class="panel-heading">${url.name} <i class="fa fa-spinner fa-spin pull-right" show.bind="url.checking"></i></div>
+                  <div class="panel-body">This is content.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
       </div>
     </section>
   </div>
