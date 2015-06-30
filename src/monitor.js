@@ -3,89 +3,51 @@ import {inject} from 'aurelia-framework';
 import {HttpClient} from 'aurelia-http-client';
 
 @inject(HttpClient)
-export class Monitor{
+export class Monitor {
   groups = [];
   urls = [];
   services = [];
   searchGroup = {};
-  url = 'http://newdev.cmgeneral.local:9091/';
-  port = '9091';
-
-  addUrl(options) {
-    this.urls.push(new MonitorEndpoint(options, this.http));
-  }
+  endpointsConfigUrl = 'endpoints.json';
   
   addGroups(options) {
-    this.groups.push(new EndpointGroup(options));
+    this.groups.push(new EndpointGroup(options, this.http));
   }
   
-  getServiceList(){
-    debugger; 
-    var results = '';       
-    this.http.jsonp(this.url)
+  getEndPointsList() {
+    var results = '';
+    this.http.get(this.endpointsConfigUrl)
       .then(response => {
-        handleResponse(response.content);
-//        results = response.content;        
-  //      this.services = response.content.services;
-        });        
-        console.log(results);
-  }
-  
-  handleResponse(response) {
-    var results = response;
-    console.log(results);
+        var data = JSON.parse(response.response);
+        for (var endpointGroup in data) {
+          this.addGroups({
+            "name": endpointGroup,
+            "urls": data[endpointGroup].urls
+          });
+        }
+      });
   }
   
 
   constructor(http) {
     this.http = http;
-    this.addUrl({
-      "name": "NewDev",
-      "url": "http://newdev.cmgeneral.local:9091/"
-    });
-    
-    this.addUrl({
-      "name": "Test Error DNS",
-      "url": "http://api.flickrasdfasdfasdf.com/services/feeds/photos_public.gne?tags=mountain&tagmode=any&format=json"
-    });
-
-    this.addUrl({
-      "name": "Test Flickr",
-      "url": "http://api.flickr.com/services/feeds/photos_public.gne?tags=mountain&tagmode=any&format=json"
-    }); 
-    
-    this.addGroups({
-      "name": "Group1",
-      "urls" : this.urls
-    });
-    
-    this.addUrl({
-      "name": "Test Flickr 2",
-      "url": "http://api.flickr.com/services/feeds/photos_public.gne?tags=mountain&tagmode=any&format=json"
-    }); 
-    
-    this.addUrl({
-      "name": "Test Error DNS 2",
-      "url": "http://api.flickr.com/services/feeds/photos_public.gne?tags=mountain&tagmode=any&format=json"
-    });
-    
-    this.addGroups({
-      "name": "Group2",
-      "urls" : this.urls
-    }); 
+    this.getEndPointsList();
     this.searchGroup = new SearchGroups(this.groups);
-    debugger;
-    this.getServiceList();
-    
   }
 }
 
 //grouping
 export class EndpointGroup {
+  endpoints = [];
   collapsed = true;
-  constructor(options) {
+  constructor(options, http) {
+    this.http = http;
     this.name = options.name;
-    this.urls = options.urls;    
+    if (options.urls) {
+      for (var i=0; i<options.urls.length; i++) {
+        this.addUrl(options.urls[i]);
+      }
+    }
   }
   
   @computedFrom('collapsed')
@@ -96,25 +58,22 @@ export class EndpointGroup {
     }
   }
   
-  showOrHide(){    
+  showOrHide() {
     this.collapsed = this.collapsed == false;    
   }
-}
 
-//get services
-export class WindowsService {    
-  constructor(name, baseurl){
-    this.name = name;
-    this.url = baseurl + "/" + name.replace(' ', '_');
+  addUrl(options) {
+    this.endpoints.push(new MonitorEndpoint(options, this.http));
   }
-}
 
+}
 
 //monitor
 export class MonitorEndpoint {
   status = "unknown";
   intervalSpeed = 6000;
   checking = false;
+  currentData = {};
 
   constructor(options, http) {
     this.http = http;
@@ -131,10 +90,11 @@ export class MonitorEndpoint {
     var endpoint = this;
     endpoint.checking = true;
 
-    endpoint.http.jsonp(endpoint.url)
+    endpoint.http.jsonp(endpoint.url, 'callback')
       .then(response => {
         endpoint.checking = false;
         endpoint.status = "ok";
+        endpoint.currentData = response.response;
         setTimeout(function () { endpoint.startMonitor(); }, endpoint.intervalSpeed);
       })
       .catch(response => {
@@ -161,15 +121,38 @@ export class MonitorEndpoint {
       default: return true;
     }
   }
+
+  @computedFrom('currentData')
+  get dataDetails() {
+    var details = [];
+    for (var key in this.currentData) {
+      if (!this.isIgnoredDetail(key, this.currentData)) {
+        details.push({
+          "name": key,
+          "value": this.currentData[key]
+        }); 
+      }
+    }
+
+    return details;
+  }
+
+  isIgnoredDetail(detailKey, data) {
+    switch (detailKey) {
+      case "ui": return true;
+    }
+    return data.ui && data.ui.hide && data.ui.hide[detailKey];
+  }
 }
 
 //search
 export class SearchGroups {
   filteredGroups = [];
+  allGroups = [];
   _searchText = '';
-  
-  constructor(allGroups) {
-    this.allGroups = allGroups;
+
+  addGroup(group) {
+    allGroups.push(group);
   }
   
   get searchText() {

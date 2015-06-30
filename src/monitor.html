@@ -23,12 +23,18 @@
             </a>            
           </h4>       
           </div>
-          <div id="collapse${group.name}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading${group.name}">
+          <div id="collapse${group.name}" class="panel-collapse" role="tabpanel" aria-labelledby="heading${group.name}">
             <div class="panel-body">
-              <div class="col-md-4" repeat.for="url of group.urls">
-                <div class="panel ${url.statusCss}">
-                  <div class="panel-heading">${url.name} <i class="fa fa-spinner fa-spin pull-right" show.bind="url.checking"></i></div>
-                  <div class="panel-body">This is content.</div>
+              <div class="col-md-4" repeat.for="endpoint of group.endpoints">
+                <div class="panel ${endpoint.statusCss}">
+                  <div class="panel-heading">${endpoint.name} <i class="fa fa-spinner fa-spin pull-right" show.bind="endpoint.checking"></i></div>
+                  <div class="panel-body">
+                    <ul>
+                      <li repeat.for="detail of endpoint.dataDetails">
+                        ${detail.name}: ${detail.value}
+                      </li>
+                    </ul>
+                  </div>
                 </div>
               </div>
             </div>
