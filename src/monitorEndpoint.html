@@ -1,0 +1,12 @@
+<template>
+  <div class="panel ${statusCss}">
+    <div class="panel-heading">${name} <i class="fa fa-spinner fa-spin pull-right" show.bind="checking"></i></div>
+    <div class="panel-body">
+      <ul>
+        <li repeat.for="detail of dataDetails">
+          ${detail.name}: ${detail.value}
+        </li>
+      </ul>
+    </div>
+  </div>
+</template>

@@ -14,33 +14,29 @@
   <div class="row">
     <section class="au-animate">
       <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-      <div class="panel panel-default" repeat.for="group of groups">
-        <div class="panel-heading" role="tab" id="heading${group.name}">
-          <h4 class="panel-title">
-            <a role="button" data-toggle="collapse" data-parent="#collapse${group.name}" href="#collapse${group.name}" aria-expanded="false" aria-controls="collapse${group.name}" click.trigger="group.showOrHide()">
-            ${group.name}
-            <i class="fa ${group.isExpanded} pull-right"></i>            
-            </a>            
-          </h4>       
-          </div>
-          <div id="collapse${group.name}" class="panel-collapse" role="tabpanel" aria-labelledby="heading${group.name}">
-            <div class="panel-body">
-              <div class="col-md-4" repeat.for="endpoint of group.endpoints">
-                <div class="panel ${endpoint.statusCss}">
-                  <div class="panel-heading">${endpoint.name} <i class="fa fa-spinner fa-spin pull-right" show.bind="endpoint.checking"></i></div>
-                  <div class="panel-body">
-                    <ul>
-                      <li repeat.for="detail of endpoint.dataDetails">
-                        ${detail.name}: ${detail.value}
-                      </li>
-                    </ul>
+        <div class="panel panel-default" repeat.for="group of groups">
+          <div class="panel-heading" role="tab" id="heading${group.name}">
+            <h4 class="panel-title">
+              <a role="button" data-toggle="collapse" data-parent="#collapse${group.name}" href="#collapse${group.name}" aria-expanded="false" aria-controls="collapse${group.name}" click.trigger="group.showOrHide()">
+              ${group.name}
+              <i class="fa ${group.isExpanded} pull-right"></i>            
+              </a>            
+            </h4>       
+            </div>
+            <div id="collapse${group.name}" class="panel-collapse" role="tabpanel" aria-labelledby="heading${group.name}">
+              <div class="panel-body">
+                <div class="container col-xs-12">
+                  <div class="row">
+                    <div class="col-md-4" repeat.for="endpoint of group.endpoints">
+                      <compose view="monitorEndpoint.html" view-model.bind="endpoint"></compose>
+                      <br />
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-      </div>
-      </div>
+        </div>
     </section>
   </div>
 </template>
