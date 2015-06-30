@@ -1,12 +1,43 @@
 <template>
   <div class="panel ${statusCss}">
-    <div class="panel-heading">${name} <i class="fa fa-spinner fa-spin pull-right" show.bind="checking"></i></div>
+    <div class="panel-heading" click.trigger="getInfo($event)" style="cursor: help;">
+      ${name}
+      <i click.trigger="getInfo($event)" class="fa fa-info-circle"></i> 
+      <i class="fa fa-spinner fa-spin pull-right" show.bind="checking"></i>
+    </div>
     <div class="panel-body">
-      <ul>
-        <li repeat.for="detail of dataDetails">
-          ${detail.name}: ${detail.value}
-        </li>
-      </ul>
+      <dl class="dl-horizontal">
+        <template repeat.for="detail of dataDetails">
+          <dt>${detail.name}</dt>
+          <dd>${detail.value}</dd>
+        </template>
+      </dl>
+    </div>
+  </div>
+  <div class="modal fade">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">${name} Information</h4>
+        </div>
+        <div class="modal-body">
+          <div class="jumbotron" show.bind="gettingInfo">
+            <p>
+              Please wait... <i class="fa fa-spinner fa-spin"></i>
+            </p>
+          </div>
+          <dl class="dl-horizontal">
+            <template repeat.for="detail of infoDataDetails">
+              <dt>${detail.name}</dt>
+              <dd>${detail.value}</dd>
+            </template>
+          </dl>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
     </div>
   </div>
 </template>

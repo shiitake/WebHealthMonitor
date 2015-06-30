@@ -5,6 +5,10 @@ export class MonitorEndpoint {
   intervalSpeed = 6000;
   checking = false;
   currentData = {};
+  showInfo = false;
+  gettingInfo = false;
+  infoUrl = '';
+  infoData = {};
 
   constructor(options, http) {
     this.http = http;
@@ -26,6 +30,9 @@ export class MonitorEndpoint {
         endpoint.checking = false;
         endpoint.status = "ok";
         endpoint.currentData = response.response;
+        if (response.response && response.response.ui) {
+          endpoint.infoUrl = this.getInfoUrl(response.response.ui.info);
+        }
         setTimeout(function () { endpoint.startMonitor(); }, endpoint.intervalSpeed);
       })
       .catch(response => {
@@ -33,6 +40,32 @@ export class MonitorEndpoint {
         this.status = "error";
         setTimeout(function () { endpoint.startMonitor(); }, endpoint.intervalSpeed);
       });
+  }
+
+  getInfoUrl(relativeUrl) {
+    var l = document.createElement("a");
+    l.href = this.url;
+
+    return "http://" + l.hostname + ":" + l.port + relativeUrl;
+  }
+
+  getInfo(e) {
+    $(e.target).parents("compose").children(".modal").modal();
+
+    this.gettingInfo = true;
+    this.http.jsonp(this.infoUrl, 'callback')
+      .then(response => {
+        this.infoData = response.response;
+        this.gettingInfo = false;
+      })
+      .catch(response => {
+        this.status = "error";
+      });
+  }
+
+  @computedFrom('infoUrl')
+  get hasInfo() {
+    return infoUrl && infoUrl.length > 0;
   }
 
   @computedFrom('status')
@@ -72,6 +105,21 @@ export class MonitorEndpoint {
     switch (detailKey) {
       case "ui": return true;
     }
-    return data.ui && data.ui.hide && data.ui.hide[detailKey];
+    return data && data.ui && data.ui.hide && data.ui.hide[detailKey];
+  }
+
+  @computedFrom('infoData')
+  get infoDataDetails() {
+    var details = [];
+    for (var key in this.infoData) {
+      if (!this.isIgnoredDetail(key)) {
+        details.push({
+          "name": key,
+          "value": this.infoData[key]
+        }); 
+      }
+    }
+    
+    return details;
   }
 }
