@@ -1,16 +1,12 @@
 <template>
   <nav class="navbar">
-    <div class="col-md-4 col-md-offset-8">
-  <div class="input-group navbar-right">
-  <span class="input-group-addon" id="sizing-addon1"><i class="fa fa-search"></i></span>
-  <input id="search" type="text" class="form-control pull-right" value.bind="searchFilter" placeholder="Search" aria-label="groupSearch">
-</div>
-    <ul>
-    <li repeat.for="group of groups">${group.Name}</li>
-  </ul>
+    <div class="col-md-4 col-md-offset-8 col-sm-1">
+      <div class="input-group navbar-right">
+        <span class="input-group-addon" id="sizing-addon1"><i class="fa fa-search"></i></span>
+        <input id="search" type="text" class="form-control pull-right" value.bind="searchFilter" placeholder="Search" aria-label="groupSearch">
+      </div>
     </div>
-  </nav>
-  
+  </nav>  
   <div class="row">
     <section class="au-animate">
       <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
