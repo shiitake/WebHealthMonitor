@@ -8,7 +8,7 @@ export class Monitor {
   groups = [];
   urls = [];
   services = [];
-  searchGroup = {};
+  filter = '';
   endpointsConfigUrl = 'endpoints.json';
   
   addGroups(options) {
@@ -29,11 +29,17 @@ export class Monitor {
       });
   }
   
+  set searchFilter(filter) {
+    this.filter = filter;
+    for (var i=0; i<this.groups.length; i++) {
+      this.groups[i].filtered = this.filter;
+    }
+  }
+
 
   constructor(http) {
     this.http = http;
     this.getEndPointsList();
-    this.searchGroup = new SearchGroups(this.groups);
   }
 }
 
@@ -41,6 +47,8 @@ export class Monitor {
 export class EndpointGroup {
   endpoints = [];
   collapsed = true;
+  filtered = '';
+
   constructor(options, http) {
     this.http = http;
     this.name = options.name;
@@ -67,29 +75,17 @@ export class EndpointGroup {
     this.endpoints.push(new MonitorEndpoint(options, this.http));
   }
 
-}
-
-
-//search
-export class SearchGroups {
-  filteredGroups = [];
-  allGroups = [];
-  _searchText = '';
-
-  addGroup(group) {
-    allGroups.push(group);
-  }
-  
-  get searchText() {
-    return this._searchText;
-  }
-  
-  set searchText(newValue) {
-    this._searchText = newValue;
-    if (newValue === '') {
-      this.filteredGroups = [];
-    } else {
-      this.filteredGroups = this.allGroups.filter(x => x.abstract.indexOf(this._searchText) !== -1);
+  @computedFrom('endpoints', 'filtered')
+  get endPointsFiltered() {
+    if (!this.filtered) {
+      return this.endpoints;
     }
+    var endpointsFiltered = [];
+    for (var i=0; i<this.endpoints.length; i++) {
+      if (this.endpoints[i].name.toLowerCase().indexOf(this.filtered.toLowerCase()) > -1) {
+        endpointsFiltered.push(this.endpoints[i]);
+      }
+    }
+    return endpointsFiltered;
   }
 }

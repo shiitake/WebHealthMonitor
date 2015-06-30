@@ -3,10 +3,10 @@
     <div class="col-md-4 col-md-offset-8">
   <div class="input-group navbar-right">
   <span class="input-group-addon" id="sizing-addon1"><i class="fa fa-search"></i></span>
-  <input id="search" type="text" class="form-control pull-right" value.bind="searchText" placeholder="Search" aria-label="groupSearch">
+  <input id="search" type="text" class="form-control pull-right" value.bind="searchFilter" placeholder="Search" aria-label="groupSearch">
 </div>
     <ul>
-    <li repeat.for="group of filteredGroups">${group.Name}</li>
+    <li repeat.for="group of groups">${group.Name}</li>
   </ul>
     </div>
   </nav>
@@ -27,7 +27,7 @@
               <div class="panel-body">
                 <div class="container col-xs-12">
                   <div class="row">
-                    <div class="col-md-4" repeat.for="endpoint of group.endpoints">
+                    <div class="col-md-4" repeat.for="endpoint of group.endPointsFiltered">
                       <compose view="monitorEndpoint.html" view-model.bind="endpoint"></compose>
                       <br />
                     </div>
