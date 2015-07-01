@@ -37,7 +37,6 @@ export class Monitor {
     }
   }
 
-
   constructor(http) {
     this.http = http;    
     this.getEndPointsList();  
@@ -49,6 +48,9 @@ export class EndpointGroup {
   endpoints = [];
   collapsed = true;
   filtered = '';
+  intervalSpeed = 12000;
+  sorting = false;
+  spinme = false;
 
   constructor(options, http) {
     this.http = http;    
@@ -57,7 +59,8 @@ export class EndpointGroup {
       for (var i=0; i<options.urls.length; i++) {
         this.addUrl(options.urls[i]);
       }
-    }
+    }    
+    this.sortEndpoints();
   }
   
   @computedFrom('collapsed')
@@ -81,7 +84,7 @@ export class EndpointGroup {
     this.endpoints.push(new MonitorEndpoint(options, this.http));
   }
   
-  defaultSort(list) {
+  defaultSort(list) {    
     var byStatus = _.groupBy(list, 'status');
       var finalList = [];
       if ('error' in byStatus){
@@ -92,10 +95,18 @@ export class EndpointGroup {
         }      
       if ('ok' in byStatus){
         finalList = finalList.concat(_.sortBy(byStatus['ok'], 'name'));
-        }            
+        }                        
       return finalList;
   }
-
+  
+  sortEndpoints() {    
+    var endpointGroup = this;
+    endpointGroup.sorting = true;    
+    endpointGroup.endpoints = this.defaultSort(endpointGroup.endpoints);
+    endpointGroup.sorting = false;
+    setTimeout(function () { endpointGroup.sortEndpoints(); }, endpointGroup.intervalSpeed);
+  }
+  
   @computedFrom('endpoints', 'filtered')
   get endPointsFiltered() {
     if (!this.filtered) {                  
@@ -107,6 +118,7 @@ export class EndpointGroup {
         endpointsFiltered.push(this.endpoints[i]);
       }
     }    
+    this.checking = false;
     return this.defaultSort(endpointsFiltered);
   }
 }

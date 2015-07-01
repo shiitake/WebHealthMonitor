@@ -14,10 +14,11 @@
           <div class="panel-heading" role="tab" id="heading${group.shortName}">
             <h4 class="panel-title">
               <a role="button" data-toggle="collapse" data-parent="#collapse${group.shortName}" href="#collapse${group.shortName}" aria-expanded="false" aria-controls="collapse${group.shortName}" click.trigger="group.showOrHide()">
-              ${group.name}
-              <i class="fa ${group.isExpanded} pull-right"></i>            
-              </a>            
-            </h4>       
+              ${group.name}              
+              <i class="fa ${group.isExpanded} pull-right"></i>                          
+              </a>
+              <i show.bind="spinme" class="fa fa-spinner fa-spin pull-right"></i>            
+            </h4>                   
             </div>
             <div id="collapse${group.shortName}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading${group.shortName}">
               <div class="panel-body">
