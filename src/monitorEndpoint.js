@@ -21,7 +21,7 @@ export class MonitorEndpoint {
   }
 
   
-  startMonitor() {
+  startMonitor() {	     
     var endpoint = this;
     endpoint.checking = true;
 

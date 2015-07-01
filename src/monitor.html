@@ -11,28 +11,27 @@
     <section class="au-animate">
       <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         <div class="panel panel-default" repeat.for="group of groups">
-          <div class="panel-heading" role="tab" id="heading${group.name}">
+          <div class="panel-heading" role="tab" id="heading${group.shortName}">
             <h4 class="panel-title">
-              <a role="button" data-toggle="collapse" data-parent="#collapse${group.name}" href="#collapse${group.name}" aria-expanded="false" aria-controls="collapse${group.name}" click.trigger="group.showOrHide()">
+              <a role="button" data-toggle="collapse" data-parent="#collapse${group.shortName}" href="#collapse${group.shortName}" aria-expanded="false" aria-controls="collapse${group.shortName}" click.trigger="group.showOrHide()">
               ${group.name}
               <i class="fa ${group.isExpanded} pull-right"></i>            
               </a>            
             </h4>       
             </div>
-            <div id="collapse${group.name}" class="panel-collapse" role="tabpanel" aria-labelledby="heading${group.name}">
+            <div id="collapse${group.shortName}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading${group.shortName}">
               <div class="panel-body">
                 <div class="container col-xs-12">
                   <div class="row">
                     <div class="col-md-4" repeat.for="endpoint of group.endPointsFiltered">
                       <compose view="monitorEndpoint.html" view-model.bind="endpoint"></compose>
                       <br />
-                    </div>
+                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
+          </div>        
     </section>
   </div>
 </template>

@@ -2,6 +2,7 @@ import {computedFrom} from 'aurelia-framework';
 import {inject} from 'aurelia-framework';
 import {HttpClient} from 'aurelia-http-client';
 import {MonitorEndpoint} from 'monitorEndpoint';
+import _ from 'underscore';
 
 @inject(HttpClient)
 export class Monitor {
@@ -38,9 +39,9 @@ export class Monitor {
 
 
   constructor(http) {
-    this.http = http;
-    this.getEndPointsList();
-  }
+    this.http = http;    
+    this.getEndPointsList();  
+    }
 }
 
 //grouping
@@ -50,7 +51,7 @@ export class EndpointGroup {
   filtered = '';
 
   constructor(options, http) {
-    this.http = http;
+    this.http = http;    
     this.name = options.name;
     if (options.urls) {
       for (var i=0; i<options.urls.length; i++) {
@@ -67,6 +68,11 @@ export class EndpointGroup {
     }
   }
   
+  get shortName(){
+    return this.name.replace(/ |\./g, "_");
+  }  
+
+  
   showOrHide() {
     this.collapsed = this.collapsed == false;    
   }
@@ -74,18 +80,33 @@ export class EndpointGroup {
   addUrl(options) {
     this.endpoints.push(new MonitorEndpoint(options, this.http));
   }
+  
+  defaultSort(list) {
+    var byStatus = _.groupBy(list, 'status');
+      var finalList = [];
+      if ('error' in byStatus){
+        finalList = finalList.concat(_.sortBy(byStatus['error'], 'name'));
+        }
+      if ('unknown' in byStatus){
+        finalList = finalList.concat(_.sortBy(byStatus['unknown'], 'name'));
+        }      
+      if ('ok' in byStatus){
+        finalList = finalList.concat(_.sortBy(byStatus['ok'], 'name'));
+        }            
+      return finalList;
+  }
 
   @computedFrom('endpoints', 'filtered')
   get endPointsFiltered() {
-    if (!this.filtered) {
-      return this.endpoints;
+    if (!this.filtered) {                  
+      return this.defaultSort(this.endpoints);      
     }
     var endpointsFiltered = [];
     for (var i=0; i<this.endpoints.length; i++) {
       if (this.endpoints[i].name.toLowerCase().indexOf(this.filtered.toLowerCase()) > -1) {
         endpointsFiltered.push(this.endpoints[i]);
       }
-    }
-    return endpointsFiltered;
+    }    
+    return this.defaultSort(endpointsFiltered);
   }
 }

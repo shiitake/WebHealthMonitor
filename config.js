@@ -28,6 +28,7 @@ System.config({
     "core-js": "npm:core-js@0.9.18",
     "css": "github:systemjs/plugin-css@0.1.12",
     "font-awesome": "npm:font-awesome@4.3.0",
+    "underscore": "npm:underscore@1.8.3",
     "github:aurelia/animator-css@0.3.2": {
       "aurelia-templating": "github:aurelia/templating@0.12.1"
     },
@@ -273,7 +274,7 @@ System.config({
     "npm:util@0.10.3": {
       "inherits": "npm:inherits@2.0.1",
       "process": "github:jspm/nodelibs-process@0.1.1"
-    }
+    }    
   }
 });
 
