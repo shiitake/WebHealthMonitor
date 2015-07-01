@@ -1,7 +1,7 @@
 import {computedFrom} from 'aurelia-framework';
 
 export class MonitorEndpoint {
-  status = "unknown";
+  _status = "unknown";
   intervalSpeed = 6000;
   checking = false;
   currentData = {};
@@ -10,7 +10,8 @@ export class MonitorEndpoint {
   infoUrl = '';
   infoData = {};
 
-  constructor(options, http) {
+  constructor(options, http, parentGroup) {
+    this.parentGroup = parentGroup;
     this.http = http;
     this.name = options.name;
     this.url = options.url;
@@ -61,6 +62,17 @@ export class MonitorEndpoint {
       .catch(response => {
         this.status = "error";
       });
+  }
+
+  get status() {
+    return this._status;
+  }
+  set status(val) {
+    var oldVal = this._status;
+    this._status = val;
+    if (oldVal !== this._status) {
+      this.parentGroup.aStatusChanged(); 
+    }
   }
 
   @computedFrom('infoUrl')
