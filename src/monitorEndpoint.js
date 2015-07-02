@@ -1,7 +1,7 @@
 import {computedFrom} from 'aurelia-framework';
 
 export class MonitorEndpoint {
-  status = "unknown";
+  _status = "unknown";
   intervalSpeed = 6000;
   checking = false;
   currentData = {};
@@ -10,7 +10,8 @@ export class MonitorEndpoint {
   infoUrl = '';
   infoData = {};
 
-  constructor(options, http) {
+  constructor(options, http, parentGroup) {
+    this.parentGroup = parentGroup;
     this.http = http;
     this.name = options.name;
     this.url = options.url;
@@ -50,6 +51,10 @@ export class MonitorEndpoint {
   }
 
   getInfo(e) {
+    if (!this.hasInfo) {
+      return;
+    }
+
     $(e.target).parents("compose").children(".modal").modal();
 
     this.gettingInfo = true;
@@ -63,9 +68,25 @@ export class MonitorEndpoint {
       });
   }
 
+  get status() {
+    return this._status;
+  }
+  set status(val) {
+    var oldVal = this._status;
+    this._status = val;
+    if (oldVal !== this._status) {
+      this.parentGroup.aStatusChanged(); 
+    }
+  }
+
   @computedFrom('infoUrl')
   get hasInfo() {
-    return infoUrl && infoUrl.length > 0;
+    return this.infoUrl && this.infoUrl.length > 0;
+  }
+
+  @computedFrom('hasInfo')
+  get clickInfoCss() {
+    return this.hasInfo ? "cursor: help;" : "";
   }
 
   @computedFrom('status')

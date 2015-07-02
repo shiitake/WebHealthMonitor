@@ -48,9 +48,8 @@ export class EndpointGroup {
   endpoints = [];
   collapsed = true;
   filtered = '';
-  intervalSpeed = 12000;
   sorting = false;
-  spinme = false;
+  forceEndpointCompute = new Date();
 
   constructor(options, http) {
     this.http = http;    
@@ -60,7 +59,6 @@ export class EndpointGroup {
         this.addUrl(options.urls[i]);
       }
     }    
-    this.sortEndpoints();
   }
   
   @computedFrom('collapsed')
@@ -75,50 +73,35 @@ export class EndpointGroup {
     return this.name.replace(/ |\./g, "_");
   }  
 
-  
   showOrHide() {
     this.collapsed = this.collapsed == false;    
   }
 
+  aStatusChanged(endpointGroup) {
+    //Hack - y u no support array computeds Aurelia??
+    this.forceEndpointCompute = new Date();
+  }
+
   addUrl(options) {
-    this.endpoints.push(new MonitorEndpoint(options, this.http));
+    var newEndpoint = new MonitorEndpoint(options, this.http, this);
+    this.endpoints.push(newEndpoint);
   }
   
-  defaultSort(list) {    
-    var byStatus = _.groupBy(list, 'status');
-      var finalList = [];
-      if ('error' in byStatus){
-        finalList = finalList.concat(_.sortBy(byStatus['error'], 'name'));
-        }
-      if ('unknown' in byStatus){
-        finalList = finalList.concat(_.sortBy(byStatus['unknown'], 'name'));
-        }      
-      if ('ok' in byStatus){
-        finalList = finalList.concat(_.sortBy(byStatus['ok'], 'name'));
-        }                        
-      return finalList;
-  }
-  
-  sortEndpoints() {    
-    var endpointGroup = this;
-    endpointGroup.sorting = true;    
-    endpointGroup.endpoints = this.defaultSort(endpointGroup.endpoints);
-    endpointGroup.sorting = false;
-    setTimeout(function () { endpointGroup.sortEndpoints(); }, endpointGroup.intervalSpeed);
-  }
-  
-  @computedFrom('endpoints', 'filtered')
+  statusOrdered = ['error', 'unknown', 'ok'];
+  @computedFrom('endpoints', 'filtered', 'forceEndpointCompute')
   get endPointsFiltered() {
-    if (!this.filtered) {                  
-      return this.defaultSort(this.endpoints);      
-    }
-    var endpointsFiltered = [];
-    for (var i=0; i<this.endpoints.length; i++) {
-      if (this.endpoints[i].name.toLowerCase().indexOf(this.filtered.toLowerCase()) > -1) {
-        endpointsFiltered.push(this.endpoints[i]);
-      }
-    }    
-    this.checking = false;
-    return this.defaultSort(endpointsFiltered);
+    var endpointGroup = this;
+    endpointGroup.sorting = true;
+    var returnValue = _.chain(this.endpoints)
+      .filter(function (endpoint) {
+        return !endpointGroup.filtered || endpoint.name.toLowerCase().indexOf(endpointGroup.filtered.toLowerCase()) > -1;
+      })
+      .sortBy(function (endpoint) {
+        return [endpointGroup.statusOrdered.indexOf(endpoint.status), endpoint.name].join("_");
+      })
+      .value();
+
+    endpointGroup.sorting = false;
+    return returnValue;
   }
 }
