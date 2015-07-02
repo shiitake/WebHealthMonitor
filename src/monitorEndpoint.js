@@ -51,6 +51,10 @@ export class MonitorEndpoint {
   }
 
   getInfo(e) {
+    if (!this.hasInfo) {
+      return;
+    }
+
     $(e.target).parents("compose").children(".modal").modal();
 
     this.gettingInfo = true;
@@ -77,7 +81,12 @@ export class MonitorEndpoint {
 
   @computedFrom('infoUrl')
   get hasInfo() {
-    return infoUrl && infoUrl.length > 0;
+    return this.infoUrl && this.infoUrl.length > 0;
+  }
+
+  @computedFrom('hasInfo')
+  get clickInfoCss() {
+    return this.hasInfo ? "cursor: help;" : "";
   }
 
   @computedFrom('status')

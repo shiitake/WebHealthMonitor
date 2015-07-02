@@ -1,8 +1,8 @@
 <template>
   <div class="panel ${statusCss}">
-    <div class="panel-heading" click.trigger="getInfo($event)" style="cursor: help;">
+    <div class="panel-heading" click.trigger="getInfo($event)" style="${clickInfoCss}">
       ${name}
-      <i click.trigger="getInfo($event)" class="fa fa-info-circle"></i> 
+      <i show.bind="hasInfo" click.trigger="getInfo($event)" class="fa fa-info-circle"></i> 
       <i class="fa fa-spinner fa-spin pull-right" show.bind="checking"></i>
     </div>
     <div class="panel-body">
