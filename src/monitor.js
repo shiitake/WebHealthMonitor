@@ -91,10 +91,12 @@ export class EndpointGroup {
   @computedFrom('endpoints', 'filtered', 'forceEndpointCompute')
   get endPointsFiltered() {
     var endpointGroup = this;
-    endpointGroup.sorting = true;
+    endpointGroup.sorting = true;    
     var returnValue = _.chain(this.endpoints)
       .filter(function (endpoint) {
-        return !endpointGroup.filtered || endpoint.name.toLowerCase().indexOf(endpointGroup.filtered.toLowerCase()) > -1;
+        return !endpointGroup.filtered 
+        || endpoint.name.toLowerCase().indexOf(endpointGroup.filtered.toLowerCase()) > -1
+        || endpoint.parentGroup.name.toLowerCase().indexOf(endpointGroup.filtered.toLowerCase()) > -1;
       })
       .sortBy(function (endpoint) {
         return [endpointGroup.statusOrdered.indexOf(endpoint.status), endpoint.name].join("_");
