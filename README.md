@@ -39,3 +39,39 @@ To run the app, follow these steps.
 
 gulp watch
 ```
+
+## Implementing a Health Check Endpoint
+
+A Health Check Endpoint responds to HTTP Gets with jsonp support. It should return a status code of 200 when it is healthy.
+
+All other endpoint specification parameters are optional, but here is an example of extra data being sent during a health check:
+
+```
+{
+  "type":"FTP Directory",
+  "host":"portal.evox.com",
+  "numberOfFiles": 18,
+  "ignoreMe": "I don't want this to show up in the UI",
+  "ui": {
+    "info":"/info/portal.evox.com/_ail_list",
+    "hide": ["ignoreMe"]
+  }
+}
+```
+
+The fields "type" and "host" should be implemented where it makes sense. 
+
+"type" indicates what type of thing is being checked. Current values are:
+
+* Website
+* Service
+* Windows Service
+* FTP Server
+* FTP File
+* FTP Directory
+
+"host" is the hostname of the thing being checked.
+
+"ignoreMe" is being ignored through the field "ui:hide".
+
+"ui:info" defines an additional REST endpoint that returns additional json data if you wish to know more information about the 'thing' that is not directly related to it's health (description, for example)
