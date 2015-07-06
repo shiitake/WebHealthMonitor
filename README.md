@@ -62,12 +62,12 @@ All other endpoint specification parameters are optional, but here is an example
 The fields "type" and "host" should be implemented where it makes sense. 
 
 "type" indicates what type of thing is being checked. Current values are:
-Website
-Service
-Windows Service
-FTP Server
-FTP File
-FTP Directory
+*Website
+*Service
+*Windows Service
+*FTP Server
+*FTP File
+*FTP Directory
 
 "host" is the hostname of the thing being checked.
 
