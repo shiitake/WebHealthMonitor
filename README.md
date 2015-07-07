@@ -20,7 +20,7 @@ cd into the directory with [dist.zip](https://github.com/dtinteractive/WebHealth
 
 This will host a simple static web server on your local box so you can try it out.
 
-### endpoints.json
+### Configure your Endpoints with endpoints.json
 
 Create a file called endpoints.json: 
 ```
