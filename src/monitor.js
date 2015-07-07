@@ -46,7 +46,7 @@ export class Monitor {
 //grouping
 export class EndpointGroup {
   endpoints = [];
-  collapsed = true;
+  collapsed = false;
   filtered = '';
   sorting = false;
   forceEndpointCompute = new Date();
@@ -64,7 +64,7 @@ export class EndpointGroup {
   @computedFrom('collapsed')
   get isExpanded(){
     switch (this.collapsed){
-      case false: return "fa-angle-double-down fa-rotate-180";
+      case true: return "fa-angle-double-down fa-rotate-180";
       default: return "fa-angle-double-down";
     }
   }
@@ -105,5 +105,10 @@ export class EndpointGroup {
 
     endpointGroup.sorting = false;
     return returnValue;
+  }
+  
+  @computedFrom('endPointsFiltered')
+  get hasEndPoints() {
+    return this.endPointsFiltered.length;    
   }
 }

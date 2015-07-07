@@ -10,17 +10,18 @@
   <div class="row">
     <section class="au-animate">
       <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-        <div class="panel panel-default" repeat.for="group of groups">
+        <div repeat.for="group of groups">
+        <div class="panel panel-default" show.bind="group.hasEndPoints">
           <div class="panel-heading" role="tab" id="heading${group.shortName}">
             <h4 class="panel-title">
-              <a role="button" data-toggle="collapse" data-parent="#collapse${group.shortName}" href="#collapse${group.shortName}" aria-expanded="false" aria-controls="collapse${group.shortName}" click.trigger="group.showOrHide()">
+              <a role="button" data-toggle="collapse" data-parent="#collapse${group.shortName}" href="#collapse${group.shortName}" aria-expanded="true" aria-controls="collapse${group.shortName}" click.trigger="group.showOrHide()">
               ${group.name} 
               <i class="fa ${group.isExpanded} pull-right"></i> 
               </a>
               <i show.bind="group.sorting" class="fa fa-spinner fa-spin pull-right"></i> 
             </h4>
             </div>
-            <div id="collapse${group.shortName}" class="panel-collapse" role="tabpanel" aria-labelledby="heading${group.shortName}">
+            <div id="collapse${group.shortName}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading${group.shortName}">
               <div class="panel-body">
                 <div class="container col-xs-12">
                   <div class="row">
@@ -29,9 +30,11 @@
                       <br />
                      </div>
                   </div>
-                </div>
+                </div>                
+              </div>
               </div>
             </div>
+            <br />
           </div>
     </section>
   </div>
