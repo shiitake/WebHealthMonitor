@@ -9,7 +9,7 @@ Any webserver should do (Apache, IIS, Nginx), but make sure to configure the web
 
 To host .json files in IIS, add a MIME type ".json" with the type "application/json".
 
-### Don't want to make a static web server?
+### Don't want to setup a static web server?
 
 If you have npm and node installed:
 `npm install http-server -g`
