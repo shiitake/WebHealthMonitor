@@ -48,12 +48,12 @@ All other endpoint specification parameters are optional, but here is an example
 
 ```
 {
-  "type":"FTP Directory",
-  "host":"portal.evox.com",
-  "numberOfFiles": 18,
+  "type":"Website",
+  "host":"www.dealertrack.com",
+  "numberOfProducts": 9001,
   "ignoreMe": "I don't want this to show up in the UI",
   "ui": {
-    "info":"/info/portal.evox.com/_ail_list",
+    "info":"/info",
     "hide": ["ignoreMe"]
   }
 }
