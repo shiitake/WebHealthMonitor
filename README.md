@@ -9,6 +9,17 @@ Any webserver should do (Apache, IIS, Nginx), but make sure to configure the web
 
 To host .json files in IIS, add a MIME type ".json" with the type "application/json".
 
+### Don't want to make a static web server?
+
+If you have npm and node installed:
+`npm install http-server -g`
+
+cd into the directory with [dist.zip](https://github.com/dtinteractive/WebHealthMonitor/releases/download/0.1.0/dist.zip) unzipped.
+
+`http-server .`
+
+This will host a simple static web server on your local box so you can try it out.
+
 ### endpoints.json
 
 Create a file called endpoints.json: 
