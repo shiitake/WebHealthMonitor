@@ -24,7 +24,7 @@
               <div class="panel-body">
                 <div class="container col-xs-12">
                   <div class="row">
-                    <div class="col-md-4" repeat.for="endpoint of group.endPointsFiltered">
+                    <div class="${endpoint.cardSizeCss}" repeat.for="endpoint of group.endPointsFiltered">
                       <compose view="monitorEndpoint.html" view-model.bind="endpoint"></compose>
                       <br />
                      </div>

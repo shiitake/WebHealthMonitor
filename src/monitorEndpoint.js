@@ -14,6 +14,7 @@ export class MonitorEndpoint {
     this.http = http;
     this.name = options.name;
     this.url = options.url;
+    this.largeCard = options.largeCard;
     if (options.status) {
       this.status = options.status;
     }
@@ -63,6 +64,11 @@ export class MonitorEndpoint {
       });
   }
 
+
+  @computedFrom('largeCard')
+  get cardSizeCss() {
+    return this.largeCard ? 'col-md-12' : 'col-md-4';
+  }
   @computedFrom('infoUrl')
   get hasInfo() {
     return infoUrl && infoUrl.length > 0;
