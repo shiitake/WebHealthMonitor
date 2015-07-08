@@ -1,4 +1,5 @@
 import {computedFrom} from 'aurelia-framework';
+import lodash from 'lodash';
 
 export class MonitorEndpoint {
   _status = "unknown";
@@ -15,13 +16,31 @@ export class MonitorEndpoint {
     this.http = http;
     this.name = options.name;
     this.url = options.url;
-    this.largeCard = options.largeCard;
-    if (options.status) {
-      this.status = options.status;
-    }
+    this.joinData(options);
     this.startMonitor();
   }
 
+  joinData(newData) {
+    if (!newData) {
+      return;
+    }
+
+    this.largeCard = this.largeCard || (newData && newData.ui && newData.ui.largeCard);
+
+    if (newData.status) {
+      this.status = newData.status;
+    }
+
+    if (newData.ui && newData.ui.info) {
+      this.infoUrl = this.getInfoUrl(newData.ui.info);
+    }
+
+    if (newData.ui && newData.ui.infoData) {
+      this.infoData = lodash.merge({}, this.infoData, newData.ui.infoData);
+    }
+
+    this.currentData = lodash.merge({}, this.currentData, newData);
+  }
   
   startMonitor() {	     
     var endpoint = this;
@@ -31,10 +50,7 @@ export class MonitorEndpoint {
       .then(response => {
         endpoint.checking = false;
         endpoint.status = "ok";
-        endpoint.currentData = response.response;
-        if (response.response && response.response.ui) {
-          endpoint.infoUrl = this.getInfoUrl(response.response.ui.info);
-        }
+        endpoint.joinData(response.response);
         setTimeout(function () { endpoint.startMonitor(); }, endpoint.intervalSpeed);
       })
       .catch(response => {
@@ -80,6 +96,30 @@ export class MonitorEndpoint {
     }
   }
 
+  @computedFrom('currentData')
+  get iconCss() {
+    if (this.currentData && this.currentData.ui && this.currentData.ui.icon) {
+      return this.currentData.ui.icon;
+    }
+    else {
+      switch (this.currentData.type) {
+        case 'FTP Server':
+        case 'FTP File':
+        case 'FTP Directory': return 'fa fa-files-o';
+        case 'Service':
+        case 'Windows Service': return 'fa fa-cogs';
+        case 'Website': return 'fa fa-desktop';
+      }
+    }
+
+    return '';
+  }
+
+  @computedFrom('iconCss')
+  get shouldShowIcon() {
+    return this.iconCss !== '';
+  }
+
   @computedFrom('largeCard')
   get cardSizeCss() {
     return this.largeCard ? 'col-md-12' : 'col-md-4';
@@ -88,11 +128,6 @@ export class MonitorEndpoint {
   @computedFrom('infoUrl')
   get hasInfo() {
     return this.infoUrl && this.infoUrl.length > 0;
-  }
-
-  @computedFrom('hasInfo')
-  get clickInfoCss() {
-    return this.hasInfo ? "cursor: help;" : "";
   }
 
   @computedFrom('status')
@@ -130,6 +165,9 @@ export class MonitorEndpoint {
 
   isIgnoredDetail(detailKey, data) {
     switch (detailKey) {
+      case "name": 
+      case "status":
+      case "url":
       case "ui": return true;
     }
     return data && data.ui && data.ui.hide && data.ui.hide[detailKey];
