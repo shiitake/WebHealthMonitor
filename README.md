@@ -117,6 +117,8 @@ The fields "type" and "host" should be implemented where it makes sense.
 
 "ui:icon" is a [Font Awesome Icon](http://fortawesome.github.io/Font-Awesome/icons/) that helps identify your endpoint application.
 
+"numberOfProducts", in this case, is not part of the standard interface. Any json properties that are not part of the interface are displayed on the Health Check card in the UI.
+
 ## Contributors - Getting Started
 
 To run the app, follow these steps.
