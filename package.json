@@ -1,6 +1,6 @@
 {
   "name": "WebHealthMonitor",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A Web UI that monitors services that implement our REST healthcheck interface",
   "keywords": [],
   "homepage": "https://github.com/dtinteractive/WebHealthMonitor",
@@ -53,6 +53,7 @@
       "bootstrap": "github:twbs/bootstrap@^3.3.4",
       "css": "github:systemjs/plugin-css@^0.1.11",
       "font-awesome": "npm:font-awesome@^4.3.0",
+      "lodash": "npm:lodash@^3.10.0",
       "underscore": "npm:underscore@^1.8.3"
     },
     "devDependencies": {
