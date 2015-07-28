@@ -7,7 +7,7 @@
   "bugs": {
     "url": "https://github.com/dtinteractive/WebHealthMonitor/issues"
   },
-  "license": "NONE",
+  "license": "MIT",
   "author": "Stephen England and Shannon Barrett",
   "main": "dist/commonjs/index.js",
   "repository": {
