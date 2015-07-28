@@ -1,5 +1,5 @@
 # WebHealthMonitor
-A Web UI that monitors services that implement our REST healthcheck interface
+A Web UI that monitors services that implement the WebHealthMonitor REST healthcheck interface
 
 ## Getting started using the UI
 
