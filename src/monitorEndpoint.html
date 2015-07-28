@@ -1,8 +1,9 @@
 <template>
   <div class="panel ${statusCss}">
-    <div class="panel-heading" click.trigger="getInfo($event)" style="${clickInfoCss}">
+    <div class="panel-heading">
+      <i show.bind="shouldShowIcon" class="${iconCss}"></i>
+      &nbsp;
       ${name}
-      <i show.bind="hasInfo" click.trigger="getInfo($event)" class="fa fa-info-circle"></i> 
       <i class="fa fa-spinner fa-spin pull-right" show.bind="checking"></i>
     </div>
     <div class="panel-body">
@@ -12,6 +13,8 @@
           <dd>${detail.value}</dd>
         </template>
       </dl>
+
+      <button show.bind="hasInfo" click.trigger="getInfo($event)" class="btn btn-block btn-info">Get More Info</button>
     </div>
   </div>
   <div class="modal fade">

@@ -26,12 +26,44 @@ Create a file called endpoints.json:
 ```
 {
   "applicationGroupOne": {
-    "urls": ["http://www.example.com/one", "http://www.example.com/two"]
+    "urls": [
+      {
+        "name": "Example One",
+        "url": "http://www.example.com/one"
+      }, 
+      {
+        "name": "Example Two",
+        "url": "http://www.example.com/two"
+      }
+    ]
   }
 }
 ```
 
 Where the urls are REST Endpoints that implement our standard interface.
+
+You can also customize the endpoints to contain additional information or change how they look in the ui:
+
+```
+{
+  "applicationGroupOne": {
+    "urls": [
+      {
+        "name": "Example One",
+        "url": "http://www.example.com/one",
+        "ui": {
+          "icon": "fa fa-bolt"
+        }
+      }, 
+      {
+        "name": "Example Two",
+        "url": "http://www.example.com/two",
+        "description": "This is the second example endpoint"
+      }
+    ]
+  }
+}
+```
 
 ## Implementing a Health Check Endpoint interface
 
@@ -57,7 +89,9 @@ All other endpoint specification parameters are optional, but here is an example
   "ignoreMe": "I don't want this to show up in the UI",
   "ui": {
     "info":"/info",
-    "hide": ["ignoreMe"]
+    "hide": ["ignoreMe"],
+    "icon": "fa fa-bolt",
+    "largeCard": true
   }
 }
 ```
@@ -78,6 +112,12 @@ The fields "type" and "host" should be implemented where it makes sense.
 "ignoreMe" is being ignored through the field "ui:hide".
 
 "ui:info" defines an additional REST endpoint that returns additional json data if you wish to know more information about the 'thing' that is not directly related to it's health (description, for example)
+
+"ui:largeCard" will have the card span the entire width of the container instead of a third of it.
+
+"ui:icon" is a [Font Awesome Icon](http://fortawesome.github.io/Font-Awesome/icons/) that helps identify your endpoint application.
+
+"numberOfProducts", in this case, is not part of the standard interface. Any json properties that are not part of the interface are displayed on the Health Check card in the UI.
 
 ## Contributors - Getting Started
 
