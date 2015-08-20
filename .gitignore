@@ -5,3 +5,4 @@ bower_components
 /dist
 build/reports
 /endpoints.json
+/templates

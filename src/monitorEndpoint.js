@@ -8,6 +8,8 @@ export class MonitorEndpoint {
   currentData = {};
   showInfo = false;
   gettingInfo = false;
+  viewingTemplate = false;
+  templateResults = "";
   infoUrl = '';
   infoData = {};
 
@@ -35,6 +37,12 @@ export class MonitorEndpoint {
       this.infoUrl = this.getInfoUrl(newData.ui.info);
     }
 
+    if (newData.ui && newData.ui.hide && newData.ui.hide.length > 0) {
+      if (this.currentData.ui && this.currentData.ui.hide && this.currentData.ui.hide.length > 0) {
+        newData.ui.hide = lodash.union(newData.ui.hide, this.currentData.ui.hide);
+      }
+    }
+
     if (newData.ui && newData.ui.infoData) {
       this.infoData = lodash.merge({}, this.infoData, newData.ui.infoData);
     }
@@ -42,14 +50,16 @@ export class MonitorEndpoint {
     this.currentData = lodash.merge({}, this.currentData, newData);
   }
   
-  startMonitor() {	     
+  startMonitor() {       
     var endpoint = this;
     endpoint.checking = true;
 
     endpoint.http.jsonp(endpoint.url, 'callback')
       .then(response => {
         endpoint.checking = false;
-        endpoint.status = "ok";
+        if (!response.response || !response.response.status) {
+          endpoint.status = "ok";
+        }
         endpoint.joinData(response.response);
         setTimeout(function () { endpoint.startMonitor(); }, endpoint.intervalSpeed);
       })
@@ -71,6 +81,7 @@ export class MonitorEndpoint {
     if (!this.hasInfo) {
       return;
     }
+    this.viewingTemplate = false;
 
     $(e.target).parents("compose").children(".modal").modal();
 
@@ -83,6 +94,34 @@ export class MonitorEndpoint {
       .catch(response => {
         this.status = "error";
       });
+  }
+
+  hideTemplate() {
+    this.viewingTemplate = false;
+  }
+
+  showHtml(html) {
+    this.templateResults = html;
+    this.viewingTemplate = true;
+  }
+
+  useTemplate(infoData, templateName) {
+    this.http.get(templateName)
+      .then(response => {
+        var template = Handlebars.compile(response.response);
+        this.showHtml(template(infoData));
+      });
+  }
+
+  activateButton(buttonIndex) {
+    var button = this.buttons[buttonIndex];
+
+    if (button.template) {
+      this.useTemplate({ 
+        "info": this.infoData,
+        "isDown": this.isDown
+      }, button.template);
+    }
   }
 
   get status() {
@@ -163,6 +202,15 @@ export class MonitorEndpoint {
     return details;
   }
 
+  @computedFrom('currentData')
+  get buttons() {
+    if (this.currentData && this.currentData["buttons"]) {
+      return this.currentData["buttons"];
+    }
+
+    return [];
+  }
+
   isIgnoredDetail(detailKey, data) {
     switch (detailKey) {
       case "name": 
@@ -170,7 +218,9 @@ export class MonitorEndpoint {
       case "url":
       case "ui": return true;
     }
-    return data && data.ui && data.ui.hide && data.ui.hide[detailKey];
+    return data && data.ui && data.ui.hide && lodash.some(data.ui.hide, function (item) {
+      return item === detailKey;
+    });
   }
 
   @computedFrom('infoData')

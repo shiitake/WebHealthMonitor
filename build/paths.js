@@ -9,5 +9,7 @@ module.exports = {
   html: appRoot + '**/*.html',
   style: 'styles/**/*.css',
   output: outputRoot,
-  sourceMapRelativePath: '../' + appRoot
+  sourceMapRelativePath: '../' + appRoot,
+  templates: 'templates/**/*.html',
+  templatesOutput: outputRoot + "templates/"
 };

@@ -39,8 +39,8 @@ export class Monitor {
 
   constructor(http) {
     this.http = http;    
-    this.getEndPointsList();  
-    }
+    this.getEndPointsList();
+  }
 }
 
 //grouping
@@ -80,6 +80,8 @@ export class EndpointGroup {
   aStatusChanged(endpointGroup) {
     //Hack - y u no support array computeds Aurelia??
     this.forceEndpointCompute = new Date();
+    //Hack - Close all modals when a status changes because new modals are created.
+    $('.modal').modal('hide');
   }
 
   addUrl(options) {

@@ -29,6 +29,12 @@ gulp.task('build-html', function () {
     .pipe(gulp.dest(paths.output));
 });
 
+gulp.task('copy-templates', function () {
+  return gulp.src(paths.templates)
+    .pipe(changed(paths.templatesOutput, {extension: '.html'}))
+    .pipe(gulp.dest(paths.templatesOutput));
+});
+
 // this task calls the clean task (located
 // in ./clean.js), then runs the build-system
 // and build-html tasks in parallel
@@ -36,7 +42,7 @@ gulp.task('build-html', function () {
 gulp.task('build', function(callback) {
   return runSequence(
     'clean',
-    ['build-system', 'build-html'],
+    ['build-system', 'build-html', 'copy-templates'],
     callback
   );
 });

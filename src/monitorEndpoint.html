@@ -30,7 +30,8 @@
               Please wait... <i class="fa fa-spinner fa-spin"></i>
             </p>
           </div>
-          <dl class="dl-horizontal">
+          <div show.bind="viewingTemplate" innerhtml="${templateResults}"></div>
+          <dl class="dl-horizontal" show.bind="!viewingTemplate">
             <template repeat.for="detail of infoDataDetails">
               <dt>${detail.name}</dt>
               <dd>${detail.value}</dd>
@@ -38,6 +39,10 @@
           </dl>
         </div>
         <div class="modal-footer">
+          <button type="button" class="btn btn-default pull-left" show.bind="viewingTemplate" click.trigger="hideTemplate()">Back</button>
+          <template repeat.for="button of buttons">
+            <button type="button" class="btn btn-info" click.trigger="$parent.activateButton($index)">${button.title}</button>
+          </template>
           <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
         </div>
       </div>
