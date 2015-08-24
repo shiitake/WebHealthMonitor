@@ -25,10 +25,10 @@ Create a file called endpoints.json:
 
 Where the urls are REST Endpoints that implement our standard interface.
 
-To get started, here are some modules you can use to monitor various services:
-* https://github.com/thealah/rest-ftp-health-facade
-* https://github.com/thealah/rest-windows-service-health-facade
-* https://github.com/thealah/rest-node-health-fascade
+To get started, here are some modules you can use to monitor various services. You can find more information on endpoints under "Implementing a Health Check Interface"
+* [FTP Sites, Files, and Directories] (https://github.com/thealah/rest-ftp-health-facade)
+* [Windows Services, IIS Websites] (https://github.com/thealah/rest-windows-service-health-facade)
+* [Node helper module to implement your own endpoint] (https://github.com/thealah/rest-node-health-fascade)
 
 You can also customize the endpoints to contain additional information or change how they look in the ui:
 
