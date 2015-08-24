@@ -3,24 +3,7 @@ A Web UI that monitors services that implement the WebHealthMonitor REST healthc
 
 ## Getting started using the UI
 
-You can host the UI by [downloading the latest release](https://github.com/dtinteractive/WebHealthMonitor/releases/download/0.1.0/dist.zip) and then hosting the static files.
-
-Any webserver should do (Apache, IIS, Nginx), but make sure to configure the webserver to allow hosting the endpoints.json configuration file, explained further below.
-
-To host .json files in IIS, add a MIME type ".json" with the type "application/json".
-
-### Don't want to setup a static web server?
-
-If you have npm and node installed:
-`npm install http-server -g`
-
-cd into the directory with [dist.zip](https://github.com/dtinteractive/WebHealthMonitor/releases/download/0.1.0/dist.zip) unzipped.
-
-`http-server .`
-
-This will host a simple static web server on your local box so you can try it out.
-
-### Configure your Endpoints with endpoints.json
+### Step 1: Create Endpoints to monitor
 
 Create a file called endpoints.json: 
 ```
@@ -41,6 +24,11 @@ Create a file called endpoints.json:
 ```
 
 Where the urls are REST Endpoints that implement our standard interface.
+
+To get started, here are some modules you can use to monitor various services:
+* https://github.com/thealah/rest-ftp-health-facade
+* https://github.com/thealah/rest-windows-service-health-facade
+* https://github.com/thealah/rest-node-health-fascade
 
 You can also customize the endpoints to contain additional information or change how they look in the ui:
 
@@ -64,6 +52,36 @@ You can also customize the endpoints to contain additional information or change
   }
 }
 ```
+### Step 2: Use the WebHealthMonitor client-side application.
+
+You have two options to use WebHealthMonitor:
+* Use the public Docker container
+* Download the latest release manually and host the static files on a web server
+
+### Using the public Docker container
+
+Create a Dockerfile to add your endpoints.json:
+```
+FROM sengland/webhealthmonitor
+
+ADD endpoints.json /etc/web-health-monitor/endpoints.json
+```
+
+Run the following commands:
+
+```
+docker build -t="webmonitor" .
+docker run -d --name="webmonitor" -p 80:8080 webmonitor
+```
+
+You should now be able to go to http://localhost:8080/ to view the Web Health Monitor
+
+### Manually Hosting WebHealthMonitor
+You can host the UI by [downloading the latest release](https://github.com/dtinteractive/WebHealthMonitor/releases/download/0.1.0/dist.zip) and then hosting the static files.
+
+Any webserver should do (Apache, IIS, Nginx), but make sure to configure the webserver to allow hosting the endpoints.json configuration file, explained further below.
+
+To host .json files in IIS, add a MIME type ".json" with the type "application/json".
 
 ## Implementing a Health Check Endpoint interface
 
